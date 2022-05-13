@@ -16,6 +16,7 @@ import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useClient } from "../../modules/client";
 import { usePlaylistWriter } from "../../modules/services/playlist.service";
+import { useStoreActions, useStoreState } from "../../store";
 
 export default function PlaylistCreateForm({
   onClose,
@@ -110,17 +111,15 @@ export default function PlaylistCreateForm({
   );
 }
 
-export function PlaylistCreateModal({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) {
+export function PlaylistCreateModal() {
   const { t } = useTranslation();
+  const showDialog = useStoreState((store) => store.playlist.createDialogShow);
+  const onClose = useStoreActions(
+    (action) => action.playlist.clearPlaylistCreateDialog
+  );
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+    <Modal isOpen={showDialog} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{t("Create New Playlist")}</ModalHeader>

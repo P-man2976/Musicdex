@@ -3,6 +3,7 @@ import {
   ChakraProps,
   Drawer,
   DrawerContent,
+  DrawerOverlay,
   Flex,
   useBreakpointValue,
   useColorModeValue,
@@ -16,9 +17,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { YouTubePlayer } from "youtube-player/dist/types";
-import { useStoreState } from "../../store";
+import { useStoreState, useStoreActions } from "../../store";
 import { SongContextMenu } from "../song/SongContextMenu";
 import { GlobalLoadingStatus } from "../common/GlobalLoadingStatus";
 import { MotionBox } from "../common/MotionBox";
@@ -30,6 +31,8 @@ import { Player } from "../player/Player";
 import { YoutubePlayer } from "../player/YoutubePlayer";
 import { AddToPlaylistModal } from "../playlist/AddToPlaylistModal";
 import Footer from "./Footer";
+import { useHotkeys } from "react-hotkeys-hook";
+import { useClient } from "../../modules/client";
 
 const POSITIONS: { [key: string]: ChakraProps } = {
   background: {
@@ -82,6 +85,7 @@ export const FrameRef = createContext<any>(null);
 
 export default function Frame({ children }: { children?: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const client = useClient();
 
   const colorMode = useColorModeValue("applight", "appdark");
   const showBottomNav = useBreakpointValue({
@@ -93,9 +97,12 @@ export default function Frame({ children }: { children?: ReactNode }) {
   const pos = useStoreState((state) => state.player.position);
   const props = useMemo(() => POSITIONS[pos], [pos]);
   const frameRef = useRef<any>(undefined);
+  const searchboxRef = useRef<any>(null);
 
   // START: Scroll Set to 0 every navigation
   const { pathname } = useLocation();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     frameRef.current?.scrollTo(0, 0);
@@ -125,20 +132,58 @@ export default function Frame({ children }: { children?: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, onClose]);
 
+  const showCreateDialog = useStoreActions(
+    (action) => action.playlist.showPlaylistCreateDialog
+  );
+
+  // Keyboard shortcut
+  // Follows spotify keyboard shortcuts
+  useHotkeys(
+    "ctrl+n, cmd+n, ctrl+l, cmd+l, cmd+alt+f, ctrl+p, cmd+,, ctrl+shift+w, cmd+shift+w",
+    (e, handler) => {
+      e.preventDefault();
+
+      switch (handler.key) {
+        case "ctrl+n":
+        case "cmd+n":
+          // Create new playlist
+          showCreateDialog();
+          break;
+        case "ctrl+l":
+        case "cmd+l":
+        case "cmd+alt+f":
+          // Focus to search box
+          searchboxRef.current.focus();
+          break;
+        case "ctrl+p":
+        case "cmd+,":
+          // Go to settings page
+          navigate("/settings");
+          break;
+        case "ctrl+shift+w":
+        case "cmd+shift+w":
+          // Logout
+          client.logout();
+      }
+    }
+  );
+
   return (
     <Box
-      h="100vh"
+      position="fixed"
+      h="100%"
       w="100vw"
       className={colorMode}
       bg={useColorModeValue("bg.100", "bg.900")}
       overflow="hidden"
     >
-      <Flex direction="column" h="100vh" overflow="hidden">
+      <Flex direction="column" h="100%" overflow="hidden">
         {/* Generic Display: always present */}
         <NavBar
           onOpen={onOpen}
           zIndex={5}
           bg={useColorModeValue("bg.100", "bg.900")}
+          ref={searchboxRef}
         />
         <GlobalLoadingStatus />
         {/* Mobile Display: (provide close method) */}
@@ -149,8 +194,9 @@ export default function Frame({ children }: { children?: ReactNode }) {
           onClose={onClose}
           returnFocusOnClose={false}
           onOverlayClick={onClose}
-          size="full"
+          size="sm"
         >
+          <DrawerOverlay />
           <DrawerContent>
             <SidebarContent onClose={onClose} closeOnNav />
           </DrawerContent>
