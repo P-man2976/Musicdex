@@ -143,7 +143,7 @@ export function AdvancedSearchFiltersForm({
     navigate({
       pathname: "/search",
       search: `?${createSearchParams({
-        q,
+        q: q || "*",
         ...(filter_by && { filter_by }),
       } as any)}`,
     });
@@ -210,10 +210,7 @@ export function AdvancedSearchFiltersForm({
           id="q"
           placeholder={t("Song Query")}
           defaultValue={qObj.q}
-          {...register("q", {
-            required: "Required",
-            minLength: { value: 1, message: t("Minimum length should be 1") },
-          })}
+          {...register("q")}
         />
         <FormErrorMessage>{errors.q && errors.q.message}</FormErrorMessage>
       </FormControl>
