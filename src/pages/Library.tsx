@@ -51,7 +51,10 @@ export default function Library() {
             </Heading>
             <Divider />
             {playlistList && (
-              <PlaylistList playlistStubs={playlistList as any} />
+              <PlaylistList
+                playlistStubs={playlistList as any}
+                editable={true}
+              />
             )}
             <Heading mx={2} my={4} size="md">
               {t("Starred Playlists")}
