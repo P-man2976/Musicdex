@@ -43,6 +43,7 @@ export const SongRow = React.memo(
       rowProps?: RowProps;
     };
   }) => {
+    console.log("re-rendered songrow");
     // const { t } = useTranslation();
     const song = useMemo(() => data.songList[index], [data.songList, index]);
     const queueSongs = useStoreActions(

@@ -7,6 +7,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useMemo } from "react";
 import { ReactElement } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { useStoreActions, useStoreState } from "../../../store";
 import { FaStepBackward, FaPause, FaPlay, FaStepForward } from "react-icons/fa";
 import { MotionBox } from "../../common/MotionBox";
@@ -24,7 +25,7 @@ interface PlaybackButtonProps extends BoxProps {
   icon: ReactElement;
 }
 
-const PlaybackButton = ({ icon, ...rest }: PlaybackButtonProps) => {
+export const PlaybackButton = ({ icon, ...rest }: PlaybackButtonProps) => {
   return (
     <MotionBox
       whileTap={{ scale: 0.9 }}

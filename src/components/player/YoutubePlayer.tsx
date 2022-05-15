@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import YouTube from "react-youtube";
 import { YouTubePlayer } from "youtube-player/dist/types";
+import { useStoreState, useStoreActions } from "../../store";
 
 export function YoutubePlayer({
   onReady,
@@ -40,8 +41,12 @@ export function usePlayer(player?: YouTubePlayer) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [currentVideo, setCurrentVideo] = useState("");
-  const [volume, setVolume] = useState(0);
-  const [muted, setMuted] = useState(false);
+  const [playerVolume, setPlayerVolume] = useState(0);
+  const volume = useStoreState((state) => state.player.volume);
+  const setVolume = useStoreActions((action) => action.player.setVolume);
+  const muted = useStoreState((state) => state.player.muted);
+  const setMuted = useStoreActions((action) => action.player.setMuted);
+  const [playerMuted, setPlayerMuted] = useState(false);
   const [state, setState] = useState(0);
   const [hasError, setError] = useState(false);
   const errorHandler = useCallback((e: any) => {
@@ -58,6 +63,29 @@ export function usePlayer(player?: YouTubePlayer) {
     };
   }, [errorHandler, player]);
 
+  // Volume change event from embed
+  useEffect(() => {
+    setVolume(playerVolume);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerVolume]);
+
+  // Mute event from embed
+  useEffect(() => {
+    setMuted(playerMuted);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerMuted]);
+
+  // Mute event from Musicdex
+  useEffect(() => {
+    muted ? player?.mute() : player?.unMute();
+  }, [player, muted]);
+
+  // Volume change event from Musicdex
+  useEffect(() => {
+    player?.setVolume(volume ?? 100);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [volume]);
+
   useEffect(() => {
     let timer: NodeJS.Timer | null = null;
     if (player) {
@@ -67,8 +95,8 @@ export function usePlayer(player?: YouTubePlayer) {
           setDuration(await player.getDuration());
           setCurrentVideo(getID(await player.getVideoUrl()));
           setState(await player.getPlayerState());
-          setVolume(await player.getVolume());
-          setMuted(await player.isMuted());
+          setPlayerVolume(await player.getVolume());
+          setPlayerMuted(await player.isMuted());
         }
       }, 333);
     }

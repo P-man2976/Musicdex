@@ -7,13 +7,16 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import { FormEvent, useState } from "react";
+import React, { FormEvent, forwardRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FiFilter, FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router";
 import { createSearchParams } from "react-router-dom";
 
-export function Searchbox(props: BoxProps) {
+export const Searchbox = forwardRef(function Searchbox(
+  props: BoxProps,
+  ref: React.ForwardedRef<HTMLInputElement>
+) {
   const { t } = useTranslation();
   let [isFocused, setFocused] = useState(false);
   let navigate = useNavigate();
@@ -42,6 +45,7 @@ export function Searchbox(props: BoxProps) {
             onBlur={() => setFocused(false)}
             onChange={(e) => setValue(e.currentTarget.value)}
             paddingRight="80px"
+            ref={ref}
           />
           <InputRightElement width="80px">
             <HStack>
@@ -75,4 +79,4 @@ export function Searchbox(props: BoxProps) {
       </form>
     </Box>
   );
-}
+});
