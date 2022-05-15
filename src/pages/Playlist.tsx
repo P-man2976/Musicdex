@@ -24,6 +24,7 @@ import {
 } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
+import { useHotkeysControl } from "../utils/HotkeyHook";
 const SongEditableTable = React.lazy(
   () => import("../components/data/SongTableEditable")
 );
@@ -39,6 +40,11 @@ export default function Playlist() {
   const { mutateAsync: writeNewPlaylist } = usePlaylistWriter();
 
   const [editMode, setEditMode] = useState(false);
+
+  useHotkeysControl({
+    actions: ["playPlaylist"],
+    playlist: playlist,
+  });
 
   useEffect(() => {
     setEditMode(false);

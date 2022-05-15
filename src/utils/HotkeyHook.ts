@@ -4,8 +4,9 @@ import { useStoreState, useStoreActions } from "../store";
 import { useSongQueuer } from "./SongQueuerHook";
 import { PlaylistCreateModal } from "../components/playlist/PlaylistCreateForm";
 
+type HotkeysAction = "addToQueue" | "addToPlaylist" | "playPlaylist";
 interface HotkeysProps {
-  actions: string[];
+  actions: HotkeysAction[];
   songs?: Song[];
   playlist?: PlaylistFull;
 }
@@ -26,7 +27,7 @@ export const useHotkeysControl = (
   );
 
   return useHotkeys(
-    "p, q, space, ctrl+n, cmd+n, ctrl+l, cmd+l",
+    "p, q, space",
     (e, handler) => {
       e.preventDefault();
       switch (handler.key) {
@@ -42,7 +43,6 @@ export const useHotkeysControl = (
           break;
         case "space":
           if (actions.includes("playPlaylist") && playlist) {
-            console.log(currentSong);
             if (!currentSong) {
               setPlaylist({ playlist });
             }

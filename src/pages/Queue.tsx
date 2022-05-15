@@ -14,7 +14,6 @@ import { ContainerInlay } from "../components/layout/ContainerInlay";
 import { PageContainer } from "../components/layout/PageContainer";
 import { useFormatPlaylist } from "../modules/playlist/useFormatPlaylist";
 import { useStoreActions, useStoreState } from "../store";
-import { useHotkeysControl } from "../utils/HotkeyHook";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
 
@@ -59,8 +58,6 @@ export const Queue = React.memo(() => {
     [currentPlaylist, formatPlaylist]
   );
   const responsiveNowPlaying = useResponseSongRow();
-
-  useHotkeysControl({ actions: ["addToPlaylist"], songs: queue });
 
   return (
     <PageContainer>

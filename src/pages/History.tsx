@@ -30,7 +30,7 @@ export default function History() {
     );
 
     useHotkeysControl({
-      actions: ["addToQueue", "playPlaylist"],
+      actions: ["playPlaylist"],
       playlist: playlist,
       songs: playlist?.content,
     });
