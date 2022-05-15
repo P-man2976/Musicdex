@@ -15,6 +15,7 @@ import {
   MenuDivider,
   Text,
 } from "@chakra-ui/react";
+import React, { forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 import { FiMenu, FiChevronDown } from "react-icons/fi";
 import { Link } from "react-router-dom";
@@ -25,7 +26,10 @@ import { LogoWithText } from "./LogoWithText";
 interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
-export function NavBar({ onOpen, ...rest }: MobileProps) {
+export const NavBar = forwardRef(function NavBar(
+  { onOpen, ...rest }: MobileProps,
+  ref: React.ForwardedRef<HTMLInputElement>
+) {
   const { t } = useTranslation();
   const { isLoggedIn, logout, user } = useClient();
 
@@ -57,7 +61,7 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
       />
       <LogoWithText display={{ base: "none", lg: "flex" }} />
 
-      <Searchbox w={{ base: "100%", lg: "40%" }} paddingX={4} />
+      <Searchbox w={{ base: "100%", lg: "40%" }} paddingX={4} ref={ref} />
 
       <HStack spacing={{ base: "0", lg: "6" }}>
         <Flex alignItems={"center"}>
@@ -115,4 +119,4 @@ export function NavBar({ onOpen, ...rest }: MobileProps) {
       </HStack>
     </Flex>
   );
-}
+});

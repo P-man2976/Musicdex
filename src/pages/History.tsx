@@ -11,6 +11,7 @@ import { formatPlaylistID } from "../modules/playlist/useFormatPlaylist";
 import { usePlaylist } from "../modules/services/playlist.service";
 import { useStoreActions } from "../store";
 import { useSongQueuer } from "../utils/SongQueuerHook";
+import { useHotkeysControl } from "../utils/HotkeyHook";
 
 export default function History() {
   const { t } = useTranslation();
@@ -27,6 +28,13 @@ export default function History() {
         user_id: user?.id,
       })
     );
+
+    useHotkeysControl({
+      actions: ["addToQueue", "playPlaylist"],
+      playlist: playlist,
+      songs: playlist?.content,
+    });
+
     return (
       <Fragment>
         <PlaylistHeading

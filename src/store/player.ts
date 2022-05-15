@@ -10,6 +10,12 @@ export interface PlayerModel {
   setOverridePosition: Action<PlayerModel, PlayerPosition | undefined>;
   fullPlayer: boolean;
   setFullPlayer: Action<PlayerModel, boolean>;
+  volume: number;
+  setVolume: Action<PlayerModel, number>;
+  endVolume: number | undefined;
+  setEndVolume: Action<PlayerModel, number>;
+  muted: boolean;
+  setMuted: Action<PlayerModel, boolean>;
 
   position: Computed<PlayerModel, PlayerPosition, StoreModel>;
 }
@@ -28,6 +34,21 @@ const playerModel: PlayerModel = {
   fullPlayer: false,
   setFullPlayer: action((state, val) => {
     state.fullPlayer = val;
+  }),
+
+  volume: 100,
+  setVolume: action((state, val) => {
+    state.volume = val;
+  }),
+
+  endVolume: undefined,
+  setEndVolume: action((state, val) => {
+    state.endVolume = val;
+  }),
+
+  muted: false,
+  setMuted: action((state, val) => {
+    state.muted = val;
   }),
 
   position: computed(

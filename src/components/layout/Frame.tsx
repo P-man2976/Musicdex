@@ -69,8 +69,8 @@ const POSITIONS: { [key: string]: ChakraProps } = {
   "full-player": {
     position: "fixed",
     top: "calc(40vh/2 - min(40vh, calc(100vw * .5625))/2 + 56px + env(safe-area-inset-top))",
-    left: { base: "0", lg: "6" },
-    width: { base: "100vw", lg: "calc(50vw - 2rem)" },
+    left: { base: "0", lg: 6 },
+    width: { base: "100vw", lg: "calc(50vw - 2.75rem)" },
     h: "min(40vh, calc(100vw * .5625))",
     zIndex: 15,
   },

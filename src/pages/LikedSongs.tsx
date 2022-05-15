@@ -9,6 +9,7 @@ import { PageContainer } from "../components/layout/PageContainer";
 import { PlaylistHeading } from "../components/playlist/PlaylistHeading";
 import { useLikedSongs } from "../modules/services/like.service";
 import { useSongQueuer } from "../utils/SongQueuerHook";
+import { useHotkeysControl } from "../utils/HotkeyHook";
 
 export default function LikedSongs() {
   const { t } = useTranslation();
@@ -23,6 +24,11 @@ export default function LikedSongs() {
     [page, paginatedSongs]
   );
   const queueSongs = useSongQueuer();
+
+  useHotkeysControl({
+    actions: ["addToQueue"],
+    songs: paginatedSongs?.content,
+  });
 
   return (
     <PageContainer>
