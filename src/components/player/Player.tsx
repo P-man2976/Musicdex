@@ -133,6 +133,7 @@ export function Player({ player }: { player: any }) {
     if (currentSong) {
       console.log("[Player] Playing Song:", currentSong.name);
       loadVideoAtTime(currentSong.video_id, currentSong.start);
+      setVolume(endVolume || 0);
       player.playVideo();
       setProgress(0);
       setError(false);
